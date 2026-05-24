@@ -817,7 +817,7 @@
     <!-- ===========================================
          SLIDE 4 — MANIFESTO
          =========================================== -->
-    <section class="slide" data-folio="03 · THE PRINCIPLE" data-notes="The framing I work in is called Computer-Assisted Language Comparison. The idea is very old and very simple: use the machine to scale human expertise, not to substitute for it. So in my pipeline, AI is allowed to do two things — it can locate where a word probably is in a long recording, and it can offer a first guess at what the word is. It is not allowed to commit anything. Every entry in my dataset has been listened to, transcribed, and approved by me. The workstation I'll show you in a moment was built specifically to make that boundary impossible to cross by accident.">
+    <section class="slide" data-folio="03 · THE PRINCIPLE" data-notes="The framing I work in is called Computer-Assisted Language Comparison. The idea is very old and very simple: use the machine to scale human expertise, not to substitute for it. So in my pipeline, AI is allowed to read the audio and produce candidate transcriptions — both orthographic and phonemic. Those candidates are saved. But they remain candidates until I explicitly accept them. Every annotation in the final dataset has been reviewed and approved by me. The workstation I'll show you in a moment was built specifically to make that boundary — between candidate and accepted — impossible to cross by accident.">
         <div class="slide-content">
             <p class="eyebrow reveal" style="text-align:center;">A guiding principle</p>
             <p class="pull-quote reveal">The machine narrows the search.<br>The <span class="accent">linguist</span> makes the judgment.</p>
@@ -834,8 +834,8 @@
                 </div>
                 <div class="principle">
                     <span class="num">III.</span>
-                    <h3>Nothing saves itself</h3>
-                    <p>The system never commits a transcription or a cognate decision on its own.</p>
+                    <h3>Saved as drafts</h3>
+                    <p>Models write candidates, not commitments. Acceptance is an explicit human action.</p>
                 </div>
                 <div class="principle">
                     <span class="num">IV.</span>
@@ -857,8 +857,8 @@
             <div class="pipeline reveal">
                 <div class="station">
                     <span class="step">Step 1</span>
-                    <h3>Locate</h3>
-                    <p>Find each target word inside 2–5 h of conversation per speaker.</p>
+                    <h3>Transcribe</h3>
+                    <p>Three models read 2–5 h of audio per speaker — orthographic, Kurdish-script, and phoneme-level IPA.</p>
                     <span class="who ai">AI</span>
                 </div>
                 <div class="station">
@@ -887,23 +887,23 @@
     <!-- ===========================================
          SLIDE 6 — JOB 1: LOCATING
          =========================================== -->
-    <section class="slide" data-folio="05 · JOB ONE" data-notes="Without help, finding the 85 phylogenetically useful items inside 30 hours of conversation — where the order isn't fixed, where the speaker is repeating things, where the translator is interjecting in Arabic or Sorani — is a week of scrubbing through a waveform per speaker. The pipeline starts with a speech recognition model that another researcher has already adapted to Southern Kurdish, so its vocabulary and acoustic expectations are closer to the data than a generic system would be. It returns the orthography of what it heard with timestamps for each word. A second small model decides where speech is happening in the first place; I had to retune it so that a five-second pause between the interviewer's prompt and the speaker's response is treated as a pause, not as one continuous utterance — without that fix, ten or twenty items were being glued together into a single transcript block. What I actually see in the workstation is not a transcript. It is a ranked list of audio regions where a given target word might be. I click each candidate, listen, and either accept the region, drag its boundaries, or move on.">
+    <section class="slide" data-folio="05 · JOB ONE" data-notes="Without help, finding the 85 phylogenetically useful items inside thirty hours of conversation — where the order isn't fixed, where the speaker is repeating things, where the translator is interjecting in Arabic or Sorani — is a week of scrubbing through a waveform per speaker. So the pipeline reads the audio three times in parallel. The first model is general Whisper speech-to-text, which gives me an orthographic transcription with word-level timestamps. The second is razhan/whisper-base-sdh — a Whisper variant another researcher fine-tuned specifically for Southern Kurdish — so its vocabulary and acoustic expectations are much closer to the data than a generic model. The third is Wav2Vec2 XLSR-53, which reads the same audio as phonemes rather than words, producing IPA independently of any orthographic decision. Three transcription layers, saved side-by-side, all visible in the workstation. What I do in the workstation is review candidate regions — time spans where the joint signal of these three layers, plus verified cross-speaker references, says a given target word probably lives. I'll come back to the cross-speaker piece in two slides. The result is that finding the right 85 inside 530-plus elicited items is a focused review task rather than a thirty-hour listening task.">
         <div class="slide-content two-col">
             <div class="col-text">
-                <p class="eyebrow reveal">Job 1 · Locating</p>
-                <h2 class="reveal">85 needles.<br>530+ words of haystack.</h2>
+                <p class="eyebrow reveal">Job 1 · Reading the audio</p>
+                <h2 class="reveal">Three reads<br>of the same audio.</h2>
                 <hr class="rule reveal">
                 <ul class="bullets reveal">
-                    <li><strong>The pipeline locates — it does not transcribe.</strong></li>
-                    <li>Speech recognition fine-tuned for Southern Kurdish: Kurdish-script words plus word-level timestamps</li>
-                    <li>Voice activity detection retuned so a 5-second prompt–response gap is not glued into one utterance</li>
-                    <li>Output: a <em>ranked list of candidate audio regions</em> — never a committed transcript</li>
+                    <li><strong>Speech-to-text.</strong> Whisper produces orthographic words with word-level timestamps.</li>
+                    <li><strong>Kurdish-tuned.</strong> A Whisper variant fine-tuned for Southern Kurdish returns Kurdish-script transcriptions.</li>
+                    <li><strong>IPA, independently.</strong> A phoneme-level model reads the same audio as IPA — not as words.</li>
+                    <li><strong>Three layers, one waveform.</strong> Finding the right 85 of 530+ words joins these layers with cross-speaker reference data.</li>
                 </ul>
             </div>
             <div class="col-figure reveal">
                 <figure class="shot">
-                    <img src="assets/user-guide-annotate-workstation.png" alt="PARSE Annotate workstation showing waveform, tiers, and ranked candidate regions for a target word">
-                    <figcaption>Annotate — ranked candidates over the waveform</figcaption>
+                    <img src="assets/user-guide-annotate-workstation.png" alt="PARSE Annotate workstation showing waveform with parallel transcription tiers and ranked candidate regions">
+                    <figcaption>Annotate — three layers, one waveform</figcaption>
                 </figure>
             </div>
         </div>
@@ -912,14 +912,14 @@
     <!-- ===========================================
          SLIDE 7 — JOB 2: IPA SECOND OPINION
          =========================================== -->
-    <section class="slide" data-folio="06 · JOB TWO" data-notes="The next role for AI is as a cross-check on me. I transcribe everything in IPA by hand. But over two years of fieldwork, transcription conventions drift — a vowel I wrote one way in 2023 I might write slightly differently in 2025. So a second model, a phoneme-level one, reads the same audio independently and produces its own IPA. The system then compares the two strings and tells me where they disagree by a lot. Those are the moments I go back to the audio. The model never overwrites my transcription; it just tells me where to look twice. This is the same logic as a colleague double-checking your work — they don't get to publish under your name, but they catch what tired eyes miss.">
+    <section class="slide" data-folio="06 · JOB TWO" data-notes="The next role for AI is as a cross-check on me. I transcribe everything in IPA by hand. But over two years of fieldwork, transcription conventions drift — a vowel I wrote one way in 2023 I might write slightly differently in 2025. So that third model from Job 1 — the one that reads audio as phonemes — its IPA output gets a second use here. The system compares the model's IPA against my hand transcription and tells me where they disagree by a lot. Those are the moments I go back to the audio. The model never overwrites my transcription; it just tells me where to look twice. This is the same logic as a colleague double-checking your work — they don't get to publish under your name, but they catch what tired eyes miss.">
         <div class="slide-content two-col">
             <div class="col-text">
                 <p class="eyebrow reveal">Job 2 · Cross-checking</p>
                 <h2 class="reveal">A second opinion<br>on every IPA string.</h2>
                 <hr class="rule reveal">
                 <ul class="bullets reveal">
-                    <li>A second model reads the same audio independently — as phonemes, not words</li>
+                    <li>The IPA layer from Job 1 has a second use here — as a cross-check on my own hand transcription</li>
                     <li>Its IPA output is compared against my manual IPA, character by character</li>
                     <li>Big disagreements get flagged for re-listening</li>
                     <li>Purpose: <em>catch drift in my own conventions</em> across months of fieldwork. Not replacement.</li>
