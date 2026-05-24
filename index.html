@@ -316,13 +316,35 @@
         .title-slide .byline strong { color: var(--accent); font-weight: 800; }
 
         /* Big red signature block in the bottom-right of the title slide */
-        .title-slide .corner-block {
+        /* QR to the live deck — sits in the bottom-right of the title slide.
+           White background and a hard black border give phone cameras a clean
+           target across a lecture hall (~6m at this size). */
+        .title-slide .title-qr {
             position: absolute;
             bottom: var(--slide-padding);
             right: var(--slide-padding);
-            width: clamp(80px, 14vw, 180px);
-            height: clamp(80px, 14vw, 180px);
-            background: var(--accent);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(0.35rem, 0.8vw, 0.65rem);
+        }
+        .title-slide .title-qr img {
+            width: clamp(120px, 14vw, 200px);
+            height: clamp(120px, 14vw, 200px);
+            display: block;
+            background: #ffffff;
+            padding: clamp(6px, 0.7vw, 10px);
+            border: 3px solid var(--ink);
+            object-fit: contain;
+        }
+        .title-slide .title-qr .qr-label {
+            font-family: var(--font-body);
+            font-size: var(--eyebrow-size);
+            font-weight: 700;
+            color: var(--ink);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            text-align: center;
         }
 
         /* ===========================================
@@ -729,12 +751,10 @@
             .title-slide .lede {
                 font-size: clamp(1.15rem, 4.5vw, 1.5rem);
             }
-            .title-slide .corner-block {
-                width: 56px;
-                height: 56px;
-                bottom: clamp(1rem, 4vw, 2rem);
-                right: clamp(1rem, 4vw, 2rem);
-            }
+            /* On phones, the audience is already on the device — the QR
+               would only point them to the page they're already viewing.
+               Hide it so the title text has more breathing room. */
+            .title-slide .title-qr { display: none; }
 
             /* Hide projector / presenter UI */
             .nav-dots { display: none; }
@@ -770,7 +790,10 @@
             <p class="lede reveal">Building a Southern Kurdish dialect tree with PARSE.</p>
             <p class="byline reveal"><strong>Lucas Ardelean</strong> · University of Bamberg · University of Zurich · 2026</p>
         </div>
-        <div class="corner-block"></div>
+        <aside class="title-qr" aria-label="Scan to open the presentation on your phone">
+            <img src="assets/qr-code.png" alt="QR code linking to https://truenorth49.github.io/parse-ai-talk/">
+            <span class="qr-label">Scan to follow along</span>
+        </aside>
     </section>
 
     <!-- ===========================================
