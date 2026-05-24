@@ -347,6 +347,16 @@
             text-align: center;
         }
 
+        /* Red decorative corner block — hidden by default, shown only on
+           mobile where the QR is suppressed (audience already on the device). */
+        .title-slide .corner-block {
+            display: none;
+            position: absolute;
+            bottom: var(--slide-padding);
+            right: var(--slide-padding);
+            background: var(--accent);
+        }
+
         /* ===========================================
            MANIFESTO SLIDE (Slide 4)
            =========================================== */
@@ -753,8 +763,15 @@
             }
             /* On phones, the audience is already on the device — the QR
                would only point them to the page they're already viewing.
-               Hide it so the title text has more breathing room. */
+               Hide it and bring back the red decorative block instead. */
             .title-slide .title-qr { display: none; }
+            .title-slide .corner-block {
+                display: block;
+                width: 56px;
+                height: 56px;
+                bottom: clamp(1rem, 4vw, 2rem);
+                right: clamp(1rem, 4vw, 2rem);
+            }
 
             /* Hide projector / presenter UI */
             .nav-dots { display: none; }
@@ -794,6 +811,7 @@
             <img src="assets/qr-code.png" alt="QR code linking to https://truenorth49.github.io/parse-ai-talk/">
             <span class="qr-label">Scan to follow along</span>
         </aside>
+        <div class="corner-block" aria-hidden="true"></div>
     </section>
 
     <!-- ===========================================
