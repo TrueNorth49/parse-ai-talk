@@ -857,31 +857,31 @@
             <hr class="rule reveal">
             <div class="pipeline reveal">
                 <div class="station">
-                    <span class="step">Step 1</span>
-                    <h3>Transcribe</h3>
-                    <p>Three models read 2–5 h of audio per speaker — orthographic, Kurdish-script, and phoneme-level IPA.</p>
+                    <span class="step">Step 1 → Job 1</span>
+                    <h3>Read</h3>
+                    <p>Three models transcribe 2–5 h of audio per speaker — orthographic, Kurdish-script, and phoneme-level IPA.</p>
                     <span class="who ai">AI</span>
                 </div>
                 <div class="station">
-                    <span class="step">Step 2</span>
-                    <h3>Propose IPA</h3>
-                    <p>Generate a candidate phonemic transcription — a second opinion.</p>
+                    <span class="step">Step 2 → Job 2</span>
+                    <h3>Review</h3>
+                    <p>Linguist checks quality, picks the best repetition, splits multi-word responses, re-runs noisy outputs.</p>
+                    <span class="who human">Human</span>
+                </div>
+                <div class="station">
+                    <span class="step">Step 3 → Job 3</span>
+                    <h3>Locate</h3>
+                    <p>Use verified anchors plus the transcript layers to find the right 85 target words in 530+.</p>
                     <span class="who ai">AI</span>
                 </div>
                 <div class="station">
-                    <span class="step">Step 3</span>
+                    <span class="step">Step 4 → Job 4</span>
                     <h3>Group cognates</h3>
-                    <p>Cluster forms across speakers using sound-correspondence patterns.</p>
-                    <span class="who compute">Computational</span>
-                </div>
-                <div class="station">
-                    <span class="step">Step 4</span>
-                    <h3>Infer the tree</h3>
-                    <p>Bayesian inference yields a probability-weighted distribution over topologies.</p>
+                    <p>LexStat clusters forms using Levenshtein distance + sound correspondences learned from the data.</p>
                     <span class="who compute">Computational</span>
                 </div>
             </div>
-            <div class="review-band reveal">Every arrow passes through human review. Nothing commits without an explicit accept.</div>
+            <div class="review-band reveal">All four outputs feed Bayesian inference → a probability-weighted distribution over candidate trees.</div>
         </div>
     </section>
 
