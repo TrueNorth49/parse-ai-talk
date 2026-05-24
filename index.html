@@ -1065,9 +1065,35 @@
     </section>
 
     <!-- ===========================================
-         SLIDE 13 — THE HONEST LEDGER
+         SLIDE 13 — WHAT THE BAYESIAN OUTPUT LOOKS LIKE
+         Two visualizations from the same posterior distribution:
+         a rooted MCC tree with posterior probabilities at each node
+         (left), and an unrooted radial display of the same data (right).
          =========================================== -->
-    <section class="slide" data-folio="12 · THE HONEST LEDGER" data-notes="What I get out of this is a clean, complete character matrix and an honest report on how confident the data lets me be about each branching point in the tree. What I do not claim is that the AI did the linguistics. It found things, it proposed things, and it flagged when it was uncertain. The interpretation is still mine, and so is the responsibility for it.">
+    <section class="slide" data-folio="12 · WHAT IT LOOKS LIKE" data-notes="This is what the output of a Bayesian phylogenetic analysis actually looks like. The version on the left is a rooted tree — what we call the Maximum Clade Credibility tree. Each internal node has a number, the posterior probability, which tells you what proportion of sampled trees from the analysis contained that exact grouping. Numbers close to 1 mean the data strongly supports that split — look at the 0.9999 binding Erbil with the Bahdini and Diyarbakir Northern Kurdish varieties, or the 1.0 for the Gorani pair. Numbers around 0.5 or 0.7 mean the data is genuinely uncertain — that 0.5675 for the Kalhori-Qorve grouping is honest about how hard that particular split is to resolve with the available evidence. The visualization on the right is the same data shown without an imposed root — useful when you want to see the structure of the relationships without committing to where the tree starts. Both are produced from the same posterior distribution; they're two different ways of looking at the same statistical answer. The point to take from this slide is that the output is not a single tree. It is a population of trees, summarised here as a consensus, with confidence attached to every branching decision. Where the numbers are high, the data is saying something firm. Where they are low, the data is being honest about its own limits — and that is exactly what we asked the method for.">
+        <div class="slide-content">
+            <p class="eyebrow reveal">From the engine, visually</p>
+            <h2 class="reveal">What the output<br>actually looks like.</h2>
+            <div class="pair-grid reveal">
+                <figure class="shot">
+                    <img src="assets/bayesian-tree-rooted.png" alt="Rooted Bayesian phylogenetic tree of Kurdish, Gorani, and Zazaki varieties with posterior probabilities at each internal node">
+                    <figcaption>Rooted tree — posterior support at each node</figcaption>
+                </figure>
+                <figure class="shot">
+                    <img src="assets/bayesian-tree-unrooted.png" alt="Unrooted radial display of the same Kurdish, Gorani, and Zazaki variety relationships">
+                    <figcaption>Unrooted radial display — same data</figcaption>
+                </figure>
+            </div>
+            <p class="reveal" style="text-align:center; font-weight:700; font-size: var(--small-size); color: var(--ink); letter-spacing: 0.04em;">
+                Numbers like <strong>0.9999</strong>, <strong>0.5675</strong> = posterior probability — the share of sampled trees containing that grouping.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 14 — THE HONEST LEDGER
+         =========================================== -->
+    <section class="slide" data-folio="13 · THE HONEST LEDGER" data-notes="What I get out of this is a clean, complete character matrix and an honest report on how confident the data lets me be about each branching point in the tree. What I do not claim is that the AI did the linguistics. It found things, it proposed things, and it flagged when it was uncertain. The interpretation is still mine, and so is the responsibility for it.">
         <div class="slide-content">
             <p class="eyebrow reveal">What this delivers — and what it doesn't claim</p>
             <h2 class="reveal">The honest ledger.</h2>
@@ -1096,9 +1122,9 @@
     </section>
 
     <!-- ===========================================
-         SLIDE 14 — TAKEAWAY
+         SLIDE 15 — TAKEAWAY
          =========================================== -->
-    <section class="slide" data-folio="13 · TAKEAWAY" data-notes="I want to close on the part of this that is not specific to historical linguistics. In language assessment, the rater's judgment is the result — it is not a fact that exists independently and can be checked. That makes audit trails and second opinions more valuable than raw transcription accuracy. The pattern I've shown you — scout, second opinion, human-owned decision, full provenance — is a portable one. It is what I would want any AI to do in any context where the linguist's name ends up on the final product. One last thing — PARSE is the tool, the Southern Kurdish classification is the research, and the two are separable. If the tool helps your work, take it. If only the principle transfers, take that. Thank you. I'm happy to take questions.">
+    <section class="slide" data-folio="14 · TAKEAWAY" data-notes="I want to close on the part of this that is not specific to historical linguistics. In language assessment, the rater's judgment is the result — it is not a fact that exists independently and can be checked. That makes audit trails and second opinions more valuable than raw transcription accuracy. The pattern I've shown you — scout, second opinion, human-owned decision, full provenance — is a portable one. It is what I would want any AI to do in any context where the linguist's name ends up on the final product. One last thing — PARSE is the tool, the Southern Kurdish classification is the research, and the two are separable. If the tool helps your work, take it. If only the principle transfers, take that. Thank you. I'm happy to take questions.">
         <div class="slide-content">
             <div class="closing">
                 <p class="eyebrow reveal" style="text-align:center;">For language assessment</p>
