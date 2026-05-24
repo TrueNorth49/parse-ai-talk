@@ -912,23 +912,24 @@
     <!-- ===========================================
          SLIDE 7 — JOB 2: IPA SECOND OPINION
          =========================================== -->
-    <section class="slide" data-folio="06 · JOB TWO" data-notes="The next role for AI is as a cross-check on me. I transcribe everything in IPA by hand. But over two years of fieldwork, transcription conventions drift — a vowel I wrote one way in 2023 I might write slightly differently in 2025. So that third model from Job 1 — the one that reads audio as phonemes — gives me a starting point. When I work through each lexeme in PARSE, I have three things in front of me at once: the model's IPA, my field notes from the original elicitation, and the audio itself one click away. Where the model and my notes disagree, I play the audio for that lexeme and decide which is right. If the model came back with something obviously noisy or wrong, I re-run the IPA model on that segment with different settings rather than accept a bad output. The model never overwrites my transcription; it just gives me a second source to weigh against my notes. Like a colleague double-checking your work — they don't get to publish under your name, but they catch what tired eyes miss.">
+    <section class="slide" data-folio="06 · JOB TWO" data-notes="Job 2 is where the linguist does the work AI can't. Once the three transcription layers from Job 1 are loaded into PARSE, I go through each lexeme and make several judgments. First, I check the quality of the IPA and orthographic transcriptions — is what the model heard plausible given the audio? Second, speakers typically produced each target word two to four times in succession, so I pick which repetition to keep as the canonical token — usually the second one, since the first often has hesitation and the third can introduce hyper-articulation. Third, sometimes the speaker gave more than one word for the same prompt — synonyms, near-synonyms, or false starts followed by the real form — so I create additional slots to capture all of them rather than collapse them. Fourth, when the IPA model produced something obviously noisy, I re-run it on that segment with different settings rather than accept a garbled output. And fifth, for ambiguous IPA judgments, I use PARSE's spectrogram view to verify — formants for vowels, voice-onset timing for stops. To be clear about what PARSE does and doesn't do here: my own hand-written field notes from the original elicitation sit separately, on paper. They are a sanity check I bring to the desk; PARSE does not store them and does not compare model output against them automatically. The cross-checking is something I do, not something the system does.">
         <div class="slide-content two-col">
             <div class="col-text">
-                <p class="eyebrow reveal">Job 2 · Cross-checking</p>
-                <h2 class="reveal">A second opinion<br>on every IPA string.</h2>
+                <p class="eyebrow reveal">Job 2 · Review and decide</p>
+                <h2 class="reveal">The work AI<br>can't do.</h2>
                 <hr class="rule reveal">
                 <ul class="bullets reveal">
-                    <li>The IPA layer from Job 1 gets a second use here — a starting point against my field notes</li>
-                    <li>PARSE shows the model's IPA, my field notes, and the audio side by side for each lexeme</li>
-                    <li>When they disagree: play the audio and decide. If the IPA came out noisy, re-run it with different settings</li>
-                    <li>Purpose: <em>catch drift in my own conventions</em> across months of fieldwork. Not replacement.</li>
+                    <li><strong>Check transcription quality.</strong> Is what the model heard plausible given the audio?</li>
+                    <li><strong>Pick the repetition.</strong> Each lexeme was elicited 2–4 times; choose which to use.</li>
+                    <li><strong>Split multi-word responses.</strong> Speakers sometimes gave synonyms or false starts — both belong, in their own slots.</li>
+                    <li><strong>Re-run noisy IPA.</strong> If the model output came back garbled, run it again with different settings.</li>
+                    <li><strong>Spectrogram check.</strong> For ambiguous IPA, verify against formants and voice-onset timing.</li>
                 </ul>
             </div>
             <div class="col-figure reveal">
                 <figure class="shot">
                     <img src="assets/transcription-lanes-row-smoke.png" alt="PARSE transcription lanes showing parallel IPA and orthographic tiers for one speaker">
-                    <figcaption>Parallel IPA and orthography lanes</figcaption>
+                    <figcaption>Parallel IPA and orthography lanes for review</figcaption>
                 </figure>
             </div>
         </div>
