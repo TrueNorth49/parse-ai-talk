@@ -7,13 +7,15 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Archivo:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Archivo:wght@600;800&display=swap" rel="stylesheet">
 
     <style>
         /* ===========================================
-           SPEAKER NOTES — phone-first reading layout.
-           Pulls live from index.html on every load, so the spoken
-           script stays in sync with the deck without regeneration.
+           SPEAKER NOTES — phone-first, bullet layout.
+           Notes are embedded as structured data below (NOTES array)
+           rather than fetched from the deck. This decouples the
+           talking-script bullets from the prose press-N overlay so
+           each can be tuned for its own use.
            =========================================== */
         :root {
             --bg: #fafafa;
@@ -22,25 +24,25 @@
             --ink-mute: #666666;
             --accent: #ff3300;
             --rule: #d8d8d8;
+            --bullet: #b0b0b0;
             --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
             --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html { -webkit-text-size-adjust: 100%; }
 
         body {
             font-family: var(--font-body);
             background: var(--bg);
             color: var(--ink-soft);
-            line-height: 1.65;
-            font-size: 17px;
+            line-height: 1.55;
+            font-size: 16px;
             -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 640px;
+            max-width: 680px;
             margin: 0 auto;
             padding: clamp(1.25rem, 5vw, 2rem) clamp(1.25rem, 5vw, 1.75rem) 5rem;
         }
@@ -49,14 +51,13 @@
            HEADER
            =========================================== */
         header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
             padding-bottom: 1.25rem;
             border-bottom: 2px solid var(--ink);
         }
         header .eyebrow {
-            font-family: var(--font-body);
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--accent);
@@ -72,7 +73,7 @@
         }
         header .meta {
             margin-top: 0.6rem;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--ink-mute);
         }
         header .meta a {
@@ -86,7 +87,7 @@
            NOTE SECTIONS — one per slide
            =========================================== */
         .note-section {
-            margin-top: 2.25rem;
+            margin-top: 1.75rem;
             padding-top: 1.5rem;
             border-top: 1px solid var(--rule);
             scroll-margin-top: 1rem;
@@ -98,32 +99,92 @@
         }
         .note-section .folio {
             display: inline-block;
-            font-family: var(--font-body);
             font-size: 11px;
             font-weight: 800;
             letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--accent);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
         }
         .note-section h2 {
             font-family: var(--font-display);
-            font-size: clamp(1.2rem, 5vw, 1.45rem);
+            font-size: clamp(1.2rem, 5vw, 1.4rem);
             font-weight: 800;
-            line-height: 1.22;
+            line-height: 1.2;
             color: var(--ink);
-            margin-bottom: 0.9rem;
+            margin-bottom: 1.1rem;
             letter-spacing: -0.005em;
         }
-        .note-section p {
-            font-size: 17px;
-            line-height: 1.65;
+
+        /* ===========================================
+           GROUPS — beats within a slide
+           =========================================== */
+        .group {
+            margin-top: 1rem;
+        }
+        .group:first-of-type { margin-top: 0; }
+
+        .group-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink);
+            margin-bottom: 0.4rem;
+            padding-left: 1.1rem;
+            position: relative;
+        }
+        .group-label::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .group ul {
+            list-style: none;
+            padding-left: 1.1rem;
+        }
+        .group ul li {
+            position: relative;
+            padding-left: 1rem;
+            font-size: 16px;
+            line-height: 1.5;
             color: var(--ink-soft);
+            margin-bottom: 0.35rem;
+        }
+        .group ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            top: -0.05em;
+            color: var(--bullet);
+            font-weight: 700;
+        }
+        .group ul li strong {
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        /* Nested sub-bullets, when a bullet has its own `sub` list */
+        .group ul li ul {
+            padding-left: 1rem;
+            margin-top: 0.35rem;
+        }
+        .group ul li ul li {
+            font-size: 15px;
+            color: var(--ink-mute);
+            margin-bottom: 0.2rem;
+        }
+        .group ul li ul li::before {
+            content: '–';
+            color: var(--bullet);
         }
 
         /* ===========================================
            TOC TRIGGER + SLIDE-OUT DRAWER
-           Tap the chip to jump between slides; closes on selection.
            =========================================== */
         .toc-trigger {
             position: fixed;
@@ -161,7 +222,6 @@
         }
         #toc.open { transform: translateX(0); }
         #toc h3 {
-            font-family: var(--font-body);
             font-size: 11px;
             font-weight: 800;
             letter-spacing: 0.22em;
@@ -190,30 +250,13 @@
         }
 
         /* ===========================================
-           LOADING / ERROR
-           =========================================== */
-        .loading {
-            text-align: center;
-            color: var(--ink-mute);
-            padding: 2rem 0;
-            font-size: 14px;
-        }
-        .error {
-            background: var(--accent);
-            color: var(--bg);
-            padding: 1rem;
-            border-radius: 3px;
-            margin: 1rem 0;
-            font-weight: 600;
-        }
-
-        /* ===========================================
-           PRINT — for paper rehearsals
+           PRINT
            =========================================== */
         @media print {
             .toc-trigger, #toc { display: none; }
-            body { font-size: 11pt; line-height: 1.5; }
-            .note-section { page-break-inside: avoid; margin-top: 1.5rem; }
+            body { font-size: 11pt; line-height: 1.45; }
+            .note-section { page-break-inside: avoid; margin-top: 1.25rem; }
+            .group ul li { color: #000; }
         }
     </style>
 </head>
@@ -226,92 +269,629 @@
 
     <main class="container">
         <header>
-            <p class="eyebrow">Speaker notes</p>
+            <p class="eyebrow">Speaker notes · bullets</p>
             <h1>AI as a scout, not a judge.</h1>
-            <p class="meta">Slide-by-slide spoken script. Auto-synced with the live deck. <a href="./">Open the slides ↗</a></p>
+            <p class="meta">Bullet-form speaker cues for the PARSE talk. <a href="./">Open the slides ↗</a></p>
         </header>
 
-        <div id="notes-container">
-            <p class="loading">Loading speaker notes…</p>
-        </div>
+        <div id="notes-container"></div>
     </main>
 
     <script>
         /* ===========================================
-           LOAD NOTES
-           Fetch index.html, parse out each .slide's data-folio + data-notes,
-           render them in order. Keeping this dynamic means the notes page
-           never drifts from the deck — edit one, both update on next load.
+           STRUCTURED SPEAKER NOTES
+           Each slide = { folio, heading, groups: [ { label, bullets } ] }
+           A bullet may be a string OR an object { text, sub: [...] }.
+           strong-emphasis allowed inside bullet text via **bold**.
            =========================================== */
-        async function loadNotes() {
-            const container = document.getElementById('notes-container');
-            const tocList = document.getElementById('tocList');
-            try {
-                const res = await fetch('./index.html', { cache: 'no-cache' });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const html = await res.text();
-                const doc = new DOMParser().parseFromString(html, 'text/html');
-                const slides = Array.from(doc.querySelectorAll('.slide'));
-
-                if (slides.length === 0) {
-                    container.innerHTML = '<p class="error">No slides found in the deck.</p>';
-                    return;
-                }
-
-                const bodyParts = [];
-                const tocParts = [];
-
-                slides.forEach((slide, idx) => {
-                    const folio = (slide.getAttribute('data-folio') || '').trim();
-                    const notes = (slide.getAttribute('data-notes') || '').trim();
-                    if (!notes) return; // skip slides without notes
-
-                    // Grab the visible slide title (h1 on the title slide, h2 elsewhere)
-                    // and normalize whitespace from <br> breaks.
-                    const headingEl = slide.querySelector('h1, h2');
-                    const heading = headingEl
-                        ? headingEl.textContent.trim().replace(/\s+/g, ' ')
-                        : '';
-
-                    const id = 'slide-' + idx;
-                    const folioDisplay = folio || (idx === 0 ? 'TITLE' : 'SLIDE ' + (idx + 1));
-
-                    bodyParts.push(
-                        '<section class="note-section" id="' + id + '">' +
-                            '<span class="folio">' + escapeHtml(folioDisplay) + '</span>' +
-                            (heading ? '<h2>' + escapeHtml(heading) + '</h2>' : '') +
-                            '<p>' + escapeHtml(notes) + '</p>' +
-                        '</section>'
-                    );
-
-                    tocParts.push(
-                        '<a href="#' + id + '">' +
-                            '<span class="toc-folio">' + escapeHtml(folioDisplay) + '</span>' +
-                            escapeHtml(heading || 'Untitled') +
-                        '</a>'
-                    );
-                });
-
-                container.innerHTML = bodyParts.join('');
-                tocList.innerHTML = tocParts.join('');
-            } catch (err) {
-                container.innerHTML =
-                    '<p class="error">Could not load notes from index.html — ' +
-                    escapeHtml(err.message) + '</p>' +
-                    '<p style="margin-top:1rem;color:var(--ink-mute);font-size:14px;">' +
-                    'If you are viewing this via <code>file://</code>, your browser is blocking the fetch. ' +
-                    'Use the live URL or run a local server.</p>';
+        const NOTES = [
+            {
+                folio: 'TITLE',
+                heading: 'AI as a scout, not a judge.',
+                groups: [
+                    {
+                        label: 'Opening',
+                        bullets: [
+                            'Thank you for having me',
+                            'Today: how AI fits into a thesis on Southern Kurdish dialect phylogenetics',
+                            'And the workstation I built to keep AI useful — without taking over the linguist’s job'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '01 · THE PUZZLE',
+                heading: 'Sixty years. No consensus.',
+                groups: [
+                    {
+                        label: 'Frame — this slide is the research task',
+                        bullets: [
+                            'SK dialect classification = the thesis topic; brought me to Bamberg three years ago',
+                            'Everything that follows exists in service of this question',
+                            '**The tool did not come first**'
+                        ]
+                    },
+                    {
+                        label: 'Decades of disagreement',
+                        bullets: [
+                            'MacKenzie (1961) — one bucket',
+                            'Fattah (2000) — split into 7 subgroups',
+                            'Belelli, Mohammadirad (recent) — maybe not a genetic group at all; transitional contact zone'
+                        ]
+                    },
+                    {
+                        label: 'Why it won’t resolve',
+                        bullets: [
+                            'Not laziness — features point in different directions',
+                            'Phonology groups one way, morphology another'
+                        ]
+                    },
+                    {
+                        label: 'The reframe',
+                        bullets: [
+                            'Wrong question: "what is THE right tree?"',
+                            'Better question: "how much support does any tree have, given the data?"',
+                            '→ that framing brings probability + computation in'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '02 · THE WRONG SHORTCUT',
+                heading: 'Three problems. One job.',
+                groups: [
+                    {
+                        label: 'Problem 1 — diagnostic contrasts get flattened',
+                        bullets: [
+                            'Uvular /q/ → collapses to /k/ (or deleted)',
+                            'Dark /ɫ/ — **phonemic in Kurdish, not allophonic like English** → merges with plain /l/',
+                            'Three-way stops (aspirated / unaspirated / voiced) → flattened; unaspirated heard as voiced (European VOT model)',
+                            'Front rounded vowels → unrounded toward /i/ or /e/',
+                            'Punchline: letting AI transcribe everything erases the dialect signal first'
+                        ]
+                    },
+                    {
+                        label: 'Problem 2 — borrowing looks like cognacy',
+                        bullets: [
+                            'Basic vocab shot through with Arabic + Persian loans',
+                            'Computer happily calls a borrowing a cognate (phonetically it is one)'
+                        ]
+                    },
+                    {
+                        label: 'Problem 3 — fieldwork is rich; question needs a slice',
+                        bullets: [
+                            '530+ words elicited per speaker',
+                            'Only 85 are phylogenetically necessary',
+                            'Other 445+ are **valuable for other research** (phonology, syntax, sociolinguistic variation) — not noise'
+                        ]
+                    },
+                    {
+                        label: 'The job',
+                        bullets: [
+                            'Not "transcribe everything"',
+                            'Find the right 85, in messy recordings where elicitation order drifts'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '03 · THE PRINCIPLE',
+                heading: 'The machine narrows the search. The linguist makes the judgment.',
+                groups: [
+                    {
+                        label: 'The framing',
+                        bullets: [
+                            'Computer-Assisted Language Comparison (CALC)',
+                            'Old, simple idea: scale human expertise — don’t substitute for it'
+                        ]
+                    },
+                    {
+                        label: 'What AI is allowed to do',
+                        bullets: [
+                            'Read audio',
+                            'Produce candidate transcriptions (orthographic + phonemic)',
+                            'Those candidates are saved automatically'
+                        ]
+                    },
+                    {
+                        label: 'What the human owns',
+                        bullets: [
+                            'Acceptance is always an explicit human action',
+                            'Every annotation in the final dataset = reviewed and approved by me'
+                        ]
+                    },
+                    {
+                        label: 'The boundary',
+                        bullets: [
+                            'Candidate ≠ accepted',
+                            'PARSE was built to make crossing that boundary **impossible by accident**'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '04 · THE PIPELINE',
+                heading: 'Four stations. One chain of human review.',
+                groups: [
+                    {
+                        label: 'The whole pipeline, one slide',
+                        bullets: [
+                            'Audio in (left) → probability-weighted tree of dialect relationships (right)'
+                        ]
+                    },
+                    {
+                        label: 'Where AI works (the middle)',
+                        bullets: [
+                            'Find target words inside hours of recording',
+                            'Offer candidate IPA — second opinion against mine',
+                            'Propose cognate groupings'
+                        ]
+                    },
+                    {
+                        label: 'Under every arrow',
+                        bullets: [
+                            'Human review',
+                            'Next slides take each Job in turn'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '05 · JOB ONE',
+                heading: 'Three reads of the same audio.',
+                groups: [
+                    {
+                        label: 'The problem',
+                        bullets: [
+                            '30 h of audio; order not fixed; repetitions; translator interjections in Arabic / Sorani',
+                            'Without help = a week scrubbing waveforms per speaker'
+                        ]
+                    },
+                    {
+                        label: 'Three models, in parallel',
+                        bullets: [
+                            '**Whisper STT** — general orthography + word-level timestamps',
+                            '**razhan/whisper-base-sdh** — Whisper fine-tuned for SK → Kurdish-script',
+                            '**Wav2Vec2 XLSR-53** — phoneme-level IPA, independent of orthography'
+                        ]
+                    },
+                    {
+                        label: 'What I do',
+                        bullets: [
+                            'Three layers saved side by side, all visible in PARSE',
+                            'Review candidate regions (joint signal + cross-speaker references)',
+                            'Cross-speaker piece comes back in 2 slides'
+                        ]
+                    },
+                    {
+                        label: 'Result',
+                        bullets: [
+                            'Finding right 85 in 530+ = **focused review**, not 30-hour listening'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '06 · JOB TWO',
+                heading: 'The work AI can’t do.',
+                groups: [
+                    {
+                        label: 'The frame',
+                        bullets: [
+                            'Job 2 = the work AI can’t do',
+                            'Linguist works through each lexeme, makes judgments'
+                        ]
+                    },
+                    {
+                        label: 'Five judgments',
+                        bullets: [
+                            '**Quality check** — is what the model heard plausible?',
+                            '**Pick the repetition** — speakers said it 2–4 times; usually the 2nd (1st = hesitation, 3rd = hyper-articulation)',
+                            '**Split multi-word responses** — synonyms, false starts → new slots, don’t collapse',
+                            '**Re-run noisy IPA** — different settings, don’t accept garbled output',
+                            '**Spectrogram check** — formants for vowels, VOT for stops'
+                        ]
+                    },
+                    {
+                        label: 'To be clear',
+                        bullets: [
+                            'My field notes are on **paper**, separate from PARSE',
+                            'PARSE doesn’t store them, doesn’t auto-compare against them',
+                            'The cross-checking is something I do — not the system'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '07 · JOB THREE',
+                heading: 'The dataset becomes its own map.',
+                groups: [
+                    {
+                        label: 'The insight',
+                        bullets: [
+                            'Verified items in a recording form a **map** of the elicitation',
+                            'Know "water" and "fire" → "sun" probably falls between them'
+                        ]
+                    },
+                    {
+                        label: 'How it works',
+                        bullets: [
+                            'Scoring formula: phonetic similarity (most weight) > repetition > positional plausibility',
+                            'System never assigns — hands me a top candidate to check'
+                        ]
+                    },
+                    {
+                        label: 'Honest version',
+                        bullets: [
+                            'First speaker = the slow one',
+                            'By the 8th speaker = 2–3× faster (so much verified material to compare against)'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '08 · JOB FOUR',
+                heading: 'Cognate groups — and where they fail.',
+                groups: [
+                    {
+                        label: 'The task',
+                        bullets: [
+                            'Cognate detection — which forms across speakers descend from the same ancestor',
+                            'Tool: **LexStat** (standard — uses Levenshtein distance + learned sound correspondences)'
+                        ]
+                    },
+                    {
+                        label: 'Two characteristic failures',
+                        bullets: [
+                            'Groups loanwords as inherited (phonetically similar, historically borrowed) — e.g. Arabic *waqt*',
+                            'Misses real cognates when sound change clipped a consonant (looks like mismatch) — e.g. *dast* vs *das*',
+                            'Both require historical knowledge — algorithm doesn’t have that'
+                        ]
+                    },
+                    {
+                        label: 'What I do',
+                        bullets: [
+                            'Every grouping reviewed',
+                            'Corrections saved in a **separate layer** beside algorithm output',
+                            'Future reader sees both: machine proposal + my override'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '09 · THE WORKSTATION',
+                heading: 'Two modes. One dataset.',
+                groups: [
+                    {
+                        label: 'Framing (be honest)',
+                        bullets: [
+                            '**PARSE was not the goal** — the SK classification was',
+                            'PARSE is the residue of that research',
+                            'No standard tool (ELAN, Praat, FLEx, LingPy) covers this whole arc',
+                            'The research needed the connecting tissue'
+                        ]
+                    },
+                    {
+                        label: 'Two modes',
+                        bullets: [
+                            'Annotate = close listening (one speaker)',
+                            'Compare = pattern recognition (across all speakers)',
+                            'Different cognitive tasks → different interfaces'
+                        ]
+                    },
+                    {
+                        label: 'Three design choices (for your audience)',
+                        bullets: [
+                            'Originals **never sliced** — every annotation = timestamp pointing back to source (archival integrity)',
+                            'Machine proposal + my correction **both stored** → reproducible',
+                            'Exports LingPy + NEXUS → connects to LingPy/BEAST ecosystem (not a silo)'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '10 · AI ALL THE WAY DOWN',
+                heading: 'AI all the way down.',
+                groups: [
+                    {
+                        label: 'One more layer',
+                        bullets: [
+                            '4 jobs = what AI does **inside** the pipeline',
+                            'Setup work surrounds it: import wordlists, rename surveys, organize files, kick off jobs, export'
+                        ]
+                    },
+                    {
+                        label: 'The mechanism',
+                        bullets: [
+                            '**Model Context Protocol (MCP)** — standard for AI agents calling tools',
+                            'PARSE exposes all of it (pipeline jobs + setup + export)'
+                        ]
+                    },
+                    {
+                        label: 'What this means in practice',
+                        bullets: [
+                            'Claude / ChatGPT / any agent-capable AI can drive PARSE by typing in plain language',
+                            'No code required. No file-layout knowledge required',
+                            '"Import this wordlist and run STT on the first speaker" → agent does it'
+                        ]
+                    },
+                    {
+                        label: 'Principles still hold',
+                        bullets: [
+                            'Agent scouts. Linguist judges. Drafts ≠ commitments. Audit trail intact.'
+                        ]
+                    },
+                    {
+                        label: 'The bar dropped',
+                        bullets: [
+                            'Basic AI literacy = **same tooling a developer would have**',
+                            'Tools are already wired up'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '11 · THE METHOD',
+                heading: 'Like a confidence interval — but for trees.',
+                groups: [
+                    {
+                        label: 'Analogy',
+                        bullets: [
+                            'Like a confidence interval — but applied to **trees**'
+                        ]
+                    },
+                    {
+                        label: 'Old way vs new way',
+                        bullets: [
+                            'Traditional (parsimony, max likelihood) → one tree, called THE answer',
+                            'Bayesian → probability-weighted **population** of plausible trees'
+                        ]
+                    },
+                    {
+                        label: 'How to read it',
+                        bullets: [
+                            'Each branching point has a **posterior probability**',
+                            '= the proportion of sampled trees containing that grouping',
+                            '"Kalhori + Khanaqini together" → e.g. 87% of sampled trees'
+                        ]
+                    },
+                    {
+                        label: 'Honesty about uncertainty',
+                        bullets: [
+                            'Ambiguous data → low posterior at contested nodes',
+                            'Uncertainty is **part of the answer, not an embarrassment**'
+                        ]
+                    },
+                    {
+                        label: 'Tee-up for next slide',
+                        bullets: [
+                            'Choosing Bayesian also changed what I needed from the rest of the pipeline',
+                            'Next slide makes that bridge explicit'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '12 · WHY IT FITS',
+                heading: 'Built for messy, contested data.',
+                groups: [
+                    {
+                        label: 'Reason 1 — sample-size honesty',
+                        bullets: [
+                            '11 speakers, 6 varieties',
+                            'Traditional methods → overclaim confidence the data doesn’t support',
+                            'Bayesian → reports what evidence can carry, says so when it can’t'
+                        ]
+                    },
+                    {
+                        label: 'Reason 2 — designed for contact zones',
+                        bullets: [
+                            'Credit Zurich group — Cathcart, Bickel et al. — built for reticulated, contact-saturated West Iranian',
+                            'Models horizontal transmission (borrowing, convergence) alongside vertical inheritance',
+                            'Different features change at different speeds — lexicon / phonology / morphology don’t move together'
+                        ]
+                    },
+                    {
+                        label: 'Reason 3 — every hypothesis gets a probability',
+                        bullets: [
+                            'Output is NOT yes/no about Kalhori + Khanaqini together',
+                            'Output IS a probability',
+                            'Reframes 60 years of disagreement as **testable hypotheses with posterior support**',
+                            'Future fieldwork updates those probabilities → field moves forward'
+                        ]
+                    },
+                    {
+                        label: 'Reason 4 — the methodological hinge (research → tooling)',
+                        bullets: [
+                            'First approach: Levenshtein on hand-transcribed IPA = months per speaker',
+                            '11 speakers × 30 h audio = a YEAR of full-time transcription before the first phylogeny',
+                            'Bayesian cognate detection = **precision-budget shift**, not just inferential',
+                            'Question becomes "same word or not?" → much lower bar than publishable IPA',
+                            'Bar dropped → transcription stopped being the bottleneck',
+                            {
+                                text: 'Caveats to keep honest:',
+                                sub: [
+                                    'NOT because any single off-the-shelf model is accurate enough',
+                                    'BUT because ORTH + IPA layers + linguist review = close enough'
+                                ]
+                            },
+                            'Pipeline I walked through = what that drop made possible',
+                            '**PARSE = what that pipeline grew into**'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '13 · WHAT IT LOOKS LIKE',
+                heading: 'What the output actually looks like.',
+                groups: [
+                    {
+                        label: 'Left image — rooted MCC tree',
+                        bullets: [
+                            'Maximum Clade Credibility tree',
+                            'Each internal node has a number = **posterior probability**',
+                            '= proportion of sampled trees that contained that exact grouping'
+                        ]
+                    },
+                    {
+                        label: 'High-support examples (point at these)',
+                        bullets: [
+                            '**0.9999** — Erbil + Bahdini + Diyarbakir (Northern Kurdish)',
+                            '**1.0** — the Gorani pair',
+                            '→ data strongly supports these splits'
+                        ]
+                    },
+                    {
+                        label: 'Low-support examples (point at these)',
+                        bullets: [
+                            '**0.5675** — Kalhori + Qorve grouping',
+                            '→ data is genuinely uncertain, hard to resolve with current evidence'
+                        ]
+                    },
+                    {
+                        label: 'Right image — unrooted radial',
+                        bullets: [
+                            'Same data, no imposed root',
+                            'Useful for seeing structure without committing to where the tree starts'
+                        ]
+                    },
+                    {
+                        label: 'The takeaway',
+                        bullets: [
+                            'Output is **not a single tree**',
+                            'It is a population of trees, summarised as consensus, with confidence per branching decision',
+                            'High numbers = data is saying something firm',
+                            'Low numbers = data is being honest about its limits',
+                            '**Exactly what we asked the method for**'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '14 · THE HONEST LEDGER',
+                heading: 'The honest ledger.',
+                groups: [
+                    {
+                        label: 'What I get',
+                        bullets: [
+                            'Clean, complete character matrix',
+                            'Honest report on confidence at every branching point'
+                        ]
+                    },
+                    {
+                        label: 'What I don’t claim',
+                        bullets: [
+                            'AI did **not** do the linguistics',
+                            'AI found things, proposed things, flagged uncertainty',
+                            'Interpretation = still mine',
+                            '**Responsibility = still mine**'
+                        ]
+                    }
+                ]
+            },
+            {
+                folio: '15 · TAKEAWAY',
+                heading: 'The rater’s judgment is the result.',
+                groups: [
+                    {
+                        label: 'Closing frame',
+                        bullets: [
+                            'Not specific to historical linguistics',
+                            'In language assessment, the **rater’s judgment IS the result** (not an independent fact to be checked)',
+                            '→ audit trails + second opinions > raw transcription accuracy'
+                        ]
+                    },
+                    {
+                        label: 'The portable pattern',
+                        bullets: [
+                            'Scout · second opinion · human-owned decision · full provenance',
+                            'What I’d want from ANY AI when the linguist’s name ends up on the final product'
+                        ]
+                    },
+                    {
+                        label: 'One last thing (research / tool are separable)',
+                        bullets: [
+                            'PARSE = the tool',
+                            'SK classification = the research',
+                            'They’re separable',
+                            'If the tool helps your work → take it',
+                            'If only the principle transfers → take that'
+                        ]
+                    },
+                    {
+                        label: 'Close',
+                        bullets: [
+                            'Thank you',
+                            'Happy to take questions'
+                        ]
+                    }
+                ]
             }
-        }
+        ];
 
-        // Minimal HTML escaper for any user-supplied strings from data-* attrs.
+        /* ===========================================
+           RENDER
+           =========================================== */
         function escapeHtml(s) {
             return String(s)
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
+                .replace(/"/g, '&quot;');
+        }
+
+        // Tiny **bold** → <strong>bold</strong> renderer; HTML-safe by escaping first.
+        function renderInline(text) {
+            return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        }
+
+        function renderBullet(b) {
+            if (typeof b === 'string') {
+                return '<li>' + renderInline(b) + '</li>';
+            }
+            const sub = (b.sub || []).map(renderBullet).join('');
+            return '<li>' + renderInline(b.text) + (sub ? '<ul>' + sub + '</ul>' : '') + '</li>';
+        }
+
+        function render() {
+            const container = document.getElementById('notes-container');
+            const tocList = document.getElementById('tocList');
+            const bodyParts = [];
+            const tocParts = [];
+
+            NOTES.forEach((slide, idx) => {
+                const id = 'slide-' + idx;
+                const folio = slide.folio || 'SLIDE ' + (idx + 1);
+                const heading = slide.heading || '';
+
+                const groupsHtml = (slide.groups || []).map(g => {
+                    const bullets = (g.bullets || []).map(renderBullet).join('');
+                    return (
+                        '<div class="group">' +
+                            (g.label ? '<span class="group-label">' + escapeHtml(g.label) + '</span>' : '') +
+                            '<ul>' + bullets + '</ul>' +
+                        '</div>'
+                    );
+                }).join('');
+
+                bodyParts.push(
+                    '<section class="note-section" id="' + id + '">' +
+                        '<span class="folio">' + escapeHtml(folio) + '</span>' +
+                        (heading ? '<h2>' + escapeHtml(heading) + '</h2>' : '') +
+                        groupsHtml +
+                    '</section>'
+                );
+
+                tocParts.push(
+                    '<a href="#' + id + '">' +
+                        '<span class="toc-folio">' + escapeHtml(folio) + '</span>' +
+                        escapeHtml(heading || 'Untitled') +
+                    '</a>'
+                );
+            });
+
+            container.innerHTML = bodyParts.join('');
+            tocList.innerHTML = tocParts.join('');
         }
 
         /* ===========================================
@@ -324,22 +904,16 @@
             e.stopPropagation();
             toc.classList.toggle('open');
         });
-
-        // Close on link tap (mobile UX: get out of the way immediately)
         toc.addEventListener('click', (e) => {
-            if (e.target.closest('a')) {
-                toc.classList.remove('open');
-            }
+            if (e.target.closest('a')) toc.classList.remove('open');
         });
-
-        // Close on outside tap
         document.addEventListener('click', (e) => {
             if (toc.classList.contains('open') && !toc.contains(e.target) && !trigger.contains(e.target)) {
                 toc.classList.remove('open');
             }
         });
 
-        loadNotes();
+        render();
     </script>
 </body>
 </html>
