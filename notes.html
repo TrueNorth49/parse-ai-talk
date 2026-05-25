@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaker Notes — AI as a scout, not a judge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Archivo:wght@600;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+           SPEAKER NOTES — phone-first reading layout.
+           Pulls live from index.html on every load, so the spoken
+           script stays in sync with the deck without regeneration.
+           =========================================== */
+        :root {
+            --bg: #fafafa;
+            --ink: #111111;
+            --ink-soft: #2a2a2a;
+            --ink-mute: #666666;
+            --accent: #ff3300;
+            --rule: #d8d8d8;
+            --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            --font-display: 'Archivo', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { -webkit-text-size-adjust: 100%; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--ink-soft);
+            line-height: 1.65;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: clamp(1.25rem, 5vw, 2rem) clamp(1.25rem, 5vw, 1.75rem) 5rem;
+        }
+
+        /* ===========================================
+           HEADER
+           =========================================== */
+        header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 2px solid var(--ink);
+        }
+        header .eyebrow {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 6vw, 2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+        header .meta {
+            margin-top: 0.6rem;
+            font-size: 14px;
+            color: var(--ink-mute);
+        }
+        header .meta a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent);
+            font-weight: 700;
+        }
+
+        /* ===========================================
+           NOTE SECTIONS — one per slide
+           =========================================== */
+        .note-section {
+            margin-top: 2.25rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--rule);
+            scroll-margin-top: 1rem;
+        }
+        .note-section:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+        .note-section .folio {
+            display: inline-block;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.6rem;
+        }
+        .note-section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 5vw, 1.45rem);
+            font-weight: 800;
+            line-height: 1.22;
+            color: var(--ink);
+            margin-bottom: 0.9rem;
+            letter-spacing: -0.005em;
+        }
+        .note-section p {
+            font-size: 17px;
+            line-height: 1.65;
+            color: var(--ink-soft);
+        }
+
+        /* ===========================================
+           TOC TRIGGER + SLIDE-OUT DRAWER
+           Tap the chip to jump between slides; closes on selection.
+           =========================================== */
+        .toc-trigger {
+            position: fixed;
+            top: 0.85rem;
+            right: 0.85rem;
+            background: var(--ink);
+            color: var(--bg);
+            border: none;
+            padding: 0.55rem 0.9rem;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            border-radius: 3px;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .toc-trigger:hover,
+        .toc-trigger:focus { background: var(--accent); outline: none; }
+
+        #toc {
+            position: fixed;
+            top: 0; right: 0; bottom: 0;
+            width: min(85vw, 320px);
+            background: var(--ink);
+            color: var(--bg);
+            padding: 3.5rem 1.25rem 1.5rem;
+            overflow-y: auto;
+            z-index: 99;
+            transform: translateX(105%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+        }
+        #toc.open { transform: translateX(0); }
+        #toc h3 {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        #toc a {
+            display: block;
+            color: var(--bg);
+            text-decoration: none;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(250,250,250,0.13);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+        #toc a:active { color: var(--accent); }
+        #toc a .toc-folio {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            color: var(--accent);
+            margin-bottom: 0.15rem;
+        }
+
+        /* ===========================================
+           LOADING / ERROR
+           =========================================== */
+        .loading {
+            text-align: center;
+            color: var(--ink-mute);
+            padding: 2rem 0;
+            font-size: 14px;
+        }
+        .error {
+            background: var(--accent);
+            color: var(--bg);
+            padding: 1rem;
+            border-radius: 3px;
+            margin: 1rem 0;
+            font-weight: 600;
+        }
+
+        /* ===========================================
+           PRINT — for paper rehearsals
+           =========================================== */
+        @media print {
+            .toc-trigger, #toc { display: none; }
+            body { font-size: 11pt; line-height: 1.5; }
+            .note-section { page-break-inside: avoid; margin-top: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <button class="toc-trigger" id="tocTrigger" aria-label="Open slide index">Slides ▾</button>
+    <nav id="toc" aria-label="Slide index">
+        <h3>Jump to slide</h3>
+        <div id="tocList"></div>
+    </nav>
+
+    <main class="container">
+        <header>
+            <p class="eyebrow">Speaker notes</p>
+            <h1>AI as a scout, not a judge.</h1>
+            <p class="meta">Slide-by-slide spoken script. Auto-synced with the live deck. <a href="./">Open the slides ↗</a></p>
+        </header>
+
+        <div id="notes-container">
+            <p class="loading">Loading speaker notes…</p>
+        </div>
+    </main>
+
+    <script>
+        /* ===========================================
+           LOAD NOTES
+           Fetch index.html, parse out each .slide's data-folio + data-notes,
+           render them in order. Keeping this dynamic means the notes page
+           never drifts from the deck — edit one, both update on next load.
+           =========================================== */
+        async function loadNotes() {
+            const container = document.getElementById('notes-container');
+            const tocList = document.getElementById('tocList');
+            try {
+                const res = await fetch('./index.html', { cache: 'no-cache' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const html = await res.text();
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const slides = Array.from(doc.querySelectorAll('.slide'));
+
+                if (slides.length === 0) {
+                    container.innerHTML = '<p class="error">No slides found in the deck.</p>';
+                    return;
+                }
+
+                const bodyParts = [];
+                const tocParts = [];
+
+                slides.forEach((slide, idx) => {
+                    const folio = (slide.getAttribute('data-folio') || '').trim();
+                    const notes = (slide.getAttribute('data-notes') || '').trim();
+                    if (!notes) return; // skip slides without notes
+
+                    // Grab the visible slide title (h1 on the title slide, h2 elsewhere)
+                    // and normalize whitespace from <br> breaks.
+                    const headingEl = slide.querySelector('h1, h2');
+                    const heading = headingEl
+                        ? headingEl.textContent.trim().replace(/\s+/g, ' ')
+                        : '';
+
+                    const id = 'slide-' + idx;
+                    const folioDisplay = folio || (idx === 0 ? 'TITLE' : 'SLIDE ' + (idx + 1));
+
+                    bodyParts.push(
+                        '<section class="note-section" id="' + id + '">' +
+                            '<span class="folio">' + escapeHtml(folioDisplay) + '</span>' +
+                            (heading ? '<h2>' + escapeHtml(heading) + '</h2>' : '') +
+                            '<p>' + escapeHtml(notes) + '</p>' +
+                        '</section>'
+                    );
+
+                    tocParts.push(
+                        '<a href="#' + id + '">' +
+                            '<span class="toc-folio">' + escapeHtml(folioDisplay) + '</span>' +
+                            escapeHtml(heading || 'Untitled') +
+                        '</a>'
+                    );
+                });
+
+                container.innerHTML = bodyParts.join('');
+                tocList.innerHTML = tocParts.join('');
+            } catch (err) {
+                container.innerHTML =
+                    '<p class="error">Could not load notes from index.html — ' +
+                    escapeHtml(err.message) + '</p>' +
+                    '<p style="margin-top:1rem;color:var(--ink-mute);font-size:14px;">' +
+                    'If you are viewing this via <code>file://</code>, your browser is blocking the fetch. ' +
+                    'Use the live URL or run a local server.</p>';
+            }
+        }
+
+        // Minimal HTML escaper for any user-supplied strings from data-* attrs.
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        /* ===========================================
+           TOC DRAWER INTERACTIONS
+           =========================================== */
+        const trigger = document.getElementById('tocTrigger');
+        const toc = document.getElementById('toc');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toc.classList.toggle('open');
+        });
+
+        // Close on link tap (mobile UX: get out of the way immediately)
+        toc.addEventListener('click', (e) => {
+            if (e.target.closest('a')) {
+                toc.classList.remove('open');
+            }
+        });
+
+        // Close on outside tap
+        document.addEventListener('click', (e) => {
+            if (toc.classList.contains('open') && !toc.contains(e.target) && !trigger.contains(e.target)) {
+                toc.classList.remove('open');
+            }
+        });
+
+        loadNotes();
+    </script>
+</body>
+</html>
